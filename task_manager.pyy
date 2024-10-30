@@ -1,0 +1,72 @@
+import json
+
+# File to store tasks
+TASKS_FILE = "tasks.json"
+
+# Load tasks from file
+def load_tasks():
+    try:
+        with open(TASKS_FILE, "r") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return {}
+
+# Save tasks to file
+def save_tasks(tasks):
+    with open(TASKS_FILE, "w") as file:
+        json.dump(tasks, file, indent=4)
+
+# Add a new task
+def add_task(task_name):
+    tasks = load_tasks()
+    tasks[task_name] = {"status": "incomplete"}
+    save_tasks(tasks)
+    print(f"Task '{task_name}' added successfully.")
+
+# Mark a task as completed
+def complete_task(task_name):
+    tasks = load_tasks()
+    if task_name in tasks:
+        tasks[task_name]["status"] = "completed"
+        save_tasks(tasks)
+        print(f"Task '{task_name}' marked as completed.")
+    else:
+        print(f"Task '{task_name}' not found.")
+
+# List all tasks
+def list_tasks():
+    tasks = load_tasks()
+    if tasks:
+        print("Task List:")
+        for task_name, info in tasks.items():
+            print(f"Task: {task_name} - Status: {info['status']}")
+            print("-" * 20)
+    else:
+        print("No tasks found.")
+
+# Main program loop
+def main():
+    while True:
+        print("\nTask Manager")
+        print("1. Add Task")
+        print("2. Complete Task")
+        print("3. List All Tasks")
+        print("4. Exit")
+        choice = input("Enter your choice (1-4): ")
+
+        if choice == "1":
+            task_name = input("Enter task name: ")
+            add_task(task_name)
+        elif choice == "2":
+            task_name = input("Enter task name to mark as completed: ")
+            complete_task(task_name)
+        elif choice == "3":
+            list_tasks()
+        elif choice == "4":
+            print("Exiting Task Manager. Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+if _name_ == "_main_":
+    main()
